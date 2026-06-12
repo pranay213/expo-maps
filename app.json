@@ -41,7 +41,7 @@
         }
       ],
       [
-        "rn-ola-maps"
+        "./plugins/withOlaMaps.js"
       ]
     ],
     "experiments": {
