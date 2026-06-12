@@ -1,0 +1,59 @@
+name: Build Android Release APK
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Patch rn-ola-maps NavigationTheme Parent Style
+        run: |
+          if [ -f node_modules/rn-ola-maps/android/src/main/res/values/styles.xml ]; then
+            sed -i 's/Theme.AppCompat.Light.NoActionBar/Theme.MaterialComponents.Light.NoActionBar/g' node_modules/rn-ola-maps/android/src/main/res/values/styles.xml
+            echo "Patched rn-ola-maps styles.xml successfully!"
+          else
+            echo "Warning: node_modules/rn-ola-maps/android/src/main/res/values/styles.xml not found."
+          fi
+
+      - name: Expo Prebuild
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Build Android Release APK
+        run: |
+          cd android
+          ./gradlew assembleRelease
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
