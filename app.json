@@ -8,7 +8,11 @@
     "scheme": "expomaps",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.pranayk213.expomaps",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app needs access to your location to show your current position on the map."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -17,7 +21,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.pranayk213.expomaps"
     },
     "web": {
       "output": "static",
@@ -34,11 +39,20 @@
             "imageWidth": 76
           }
         }
+      ],
+      [
+        "rn-ola-maps"
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "78547a52-65cf-44ea-9274-74ed225a0bdf"
+      }
     }
   }
 }
